@@ -1,0 +1,34 @@
+
+<div class="table">
+    <div class="row top-row">
+        <form class="form-inline col-sm-12">
+  <label for="inlineFormInputName2">filter:</label>
+  <input #filterInput (keydown)='filter = { url : filterInput.value}' type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="inlineFormInputName2"/>
+</form>
+        <div  class="col-sm-1">#</div>
+        <div  class="col-sm-2">Time</div>
+        <div  class="col-sm-9">Url</div>
+    </div>
+    <div class="row" *ngFor="let request of requests | myfilter:filter; let i = index">
+        <div  class="col-sm-1">{{i}}</div>
+        <div  class="col-sm-2">{{request.time}}</div>
+        <div  class="col-sm-9">{{request.url}}</div>
+    </div>
+</div>
+<div bsModal #lgModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title pull-left">please enter chromecast receiver ip</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-inline">
+                    <div class="form-group">
+                        <input #ip class="form-control" name="ip" type="text" />
+                    </div>
+                    <button *ngIf="host === ''" type="submit" class="btn btn-primary" (click)="setIp(ip.value)">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

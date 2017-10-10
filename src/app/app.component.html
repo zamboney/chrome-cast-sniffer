@@ -4,6 +4,10 @@
             <label for="inlineFormInputName2">filter:</label>
             <input #filterInput (keydown)='filter = { url : filterInput.value}' type="text" class="form-control mb-2 mr-sm-2 mb-sm-0"
                 id="inlineFormInputName2" />
+            <label class="form-check-label pull-right">
+                <input type="checkbox" class="form-check-input"  [checked]="pulldown" (change)="pulldown = $event.target.checked">
+                 pull down
+            </label>
         </form>
         <div class="col-sm-1">#</div>
         <div class="col-sm-2">Time</div>
@@ -28,7 +32,7 @@
             </div>
             <div class="modal-body">
                 <button type="button" class="btn btn-primary" (click)="isCollapsed = !isCollapsed">get chromecast ip</button>
-                <div [collapse]="!isCollapsed" class="card card-block card-header">
+                <div [collapse]="isCollapsed" class="card card-block card-header">
                     <div class="well well-lg">
                         <ul>
                             <li>start casting</li>

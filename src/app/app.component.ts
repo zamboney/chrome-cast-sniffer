@@ -13,6 +13,8 @@ export class AppComponent implements AfterViewInit {
     this.modal.config.ignoreBackdropClick = true;
     this.modal.show();
   }
+  pulldown = true;
+  isCollapsed = true;
   host = '';
   error = '';
   client = null;
@@ -32,7 +34,8 @@ export class AppComponent implements AfterViewInit {
           time: new Date().toLocaleTimeString(),
           url: params.request.url
         })
-        console.log(params.request.url);
+        if (this.pulldown)
+          window.scrollTo(0, document.body.scrollHeight);
       });
       this.modal.hide();
       // enable events then start!

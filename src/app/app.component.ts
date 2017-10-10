@@ -23,7 +23,7 @@ export class AppComponent implements AfterViewInit {
   public setIp(ip: string) {
     this.host = ip;
 
-    CDP({ host: ip }, (client) => {
+    CDP({ host: ip ,secure: false}, (client) => {
       // extract domains
       const { Network, Page } = client;
       // setup handlers

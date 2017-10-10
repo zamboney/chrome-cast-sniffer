@@ -97,7 +97,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, "/* You can add global styles to this file, and also import other style files */\n\n.main {\n    margin-top: 30px;\n    padding-top: 20px;\n}\n\n\n.row.top-row {\n        position: fixed;\n    width: 100%;\n    background: gray;\n    z-index: 10;\n}\n.table {\n    padding-top: 89px;\n}\n.row {\n    border-bottom: 1px solid black;\n}\n.row:not(.top-row) > div{\n    border-right: 1px solid black;\n\n}\n.row.top-row {\n        position: fixed;\n    width: 100%;\n    background: #c5c5c5;\n    font-size: 30px;\n    z-index: 10;\n    top: 0;\n}", ""]);
+exports.push([module.i, "/* You can add global styles to this file, and also import other style files */\n\n.main {\n    margin-top: 30px;\n    padding-top: 20px;\n}\n\n\n.row.top-row {\n        position: fixed;\n    width: 100%;\n    background: gray;\n    z-index: 10;\n}\n.table {\n    padding-top: 89px;\n}\n.row {\n    border-bottom: 1px solid black;\n        width:100%;\n    word-wrap:break-word;\n}\n.row:not(.top-row) > div{\n    border-right: 1px solid black;\n\n}\n.row.top-row {\n        position: fixed;\n    width: 100%;\n    background: #c5c5c5;\n    font-size: 30px;\n    z-index: 10;\n    top: 0;\n}\n\n", ""]);
 
 // exports
 

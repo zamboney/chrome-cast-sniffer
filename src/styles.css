@@ -17,6 +17,8 @@
 }
 .row {
     border-bottom: 1px solid black;
+        width:100%;
+    word-wrap:break-word;
 }
 .row:not(.top-row) > div{
     border-right: 1px solid black;
@@ -30,3 +32,4 @@
     z-index: 10;
     top: 0;
 }
+

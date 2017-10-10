@@ -4,15 +4,22 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "serve": "ng serve",
+    "start": "node server.js",
     "build": "ng build",
+    "postinstall": "ng build --aot -prod",
     "test": "echo \"Error: no test... minimal project\" && exit 1",
     "lint": "echo \"Error: no lint... minimal project\" && exit 1",
     "e2e": "echo \"Error: no e2e... minimal project\" && exit 1"
   },
+  "engines": {
+    "node": "6.11.1",
+    "npm": "3.10.9"
+  },
   "private": true,
   "dependencies": {
     "@angular/animations": "^4.0.0",
+    "@angular/cli": "1.2.5",
     "@angular/common": "^4.0.0",
     "@angular/compiler": "^4.0.0",
     "@angular/core": "^4.0.0",
@@ -24,12 +31,12 @@
     "bootstrap": "^3.3.7",
     "chrome-remote-interface": "0.24.4",
     "core-js": "^2.4.1",
+    "express": "^4.16.2",
     "ngx-bootstrap": "^1.9.3",
     "rxjs": "^5.4.1",
     "zone.js": "^0.8.14"
   },
   "devDependencies": {
-    "@angular/cli": "1.2.5",
     "@angular/compiler-cli": "^4.0.0",
     "@angular/language-service": "^4.0.0",
     "typescript": "~2.3.3"

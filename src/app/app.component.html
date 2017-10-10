@@ -1,5 +1,7 @@
 <div class="table">
     <div class="row top-row">
+        <h3 class="text-center" *ngIf='client'>{{client?.title}} - {{client?.url}}</h3>
+        <h4 class="text-center" *ngIf='client'>{{host}}</h4>
         <form class="form-inline col-sm-12">
             <label for="inlineFormInputName2">filter:</label>
             <input #filterInput (keydown)='filter = { url : filterInput.value}' type="text" class="form-control mb-2 mr-sm-2 mb-sm-0"
@@ -77,4 +79,7 @@
             </div>
         </div>
     </div>
+</div>
+<div *ngIf="requests.length > 0" class="save" style="position: fixed; bottom:0;right:0">
+    <button type="button" (click)="save()" class="btn btn-info">Save</button>
 </div>

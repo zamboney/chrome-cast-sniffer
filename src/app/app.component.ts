@@ -2,6 +2,7 @@ import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { Pipe, PipeTransform } from '@angular/core';
 import * as  CDP from 'chrome-remote-interface';
 import { BsModalService, BsModalRef, ModalDirective } from "ngx-bootstrap/modal";
+import { CsvService } from "angular2-json2csv";
 
 @Component({
   selector: 'app-root',
@@ -13,12 +14,21 @@ export class AppComponent implements AfterViewInit {
     this.modal.config.ignoreBackdropClick = true;
     this.modal.show();
   }
+  save() {
+    var a = document.createElement("a");
+    var file = new Blob([JSON.stringify(this.rawRequests.filter(item => item.url.indexOf(this.filter.url) !== -1),null, '\t')], {type: 'application/json'});
+    a.href = URL.createObjectURL(file);
+    a.download = `${this.client.title}_ip_${this.host.replace(/\./g, '-')}_${Date.now()}.json`;
+    a.click();
+
+  }
   pulldown = true;
   isCollapsed = true;
   host = '';
   error = '';
   client = null;
   requests: Array<{ time: string, url: string }> = [];
+  rawRequests = [];
   @ViewChild('lgModal') modal: ModalDirective;
   public modalRef: BsModalRef;
   public filter: any = {
@@ -30,6 +40,9 @@ export class AppComponent implements AfterViewInit {
       const { Network, Page } = client;
       // setup handlers
       Network.requestWillBeSent((params) => {
+        this.rawRequests.push(
+          params.request
+        )
         this.requests.push({
           time: new Date().toLocaleTimeString(),
           url: params.request.url
@@ -67,7 +80,7 @@ export class AppComponent implements AfterViewInit {
     })
 
   }
-  constructor(private modalService: BsModalService) {
+  constructor(private modalService: BsModalService, private csvService: CsvService) {
 
   }
 }

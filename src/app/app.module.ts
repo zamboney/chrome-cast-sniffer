@@ -3,7 +3,8 @@ import { NgModule } from '@angular/core';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { AppComponent, MyFilterPipe } from './app.component';
-import { FormsModule }   from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import { CsvService } from "angular2-json2csv";
 
 @NgModule({
   declarations: [
@@ -14,10 +15,10 @@ import { FormsModule }   from '@angular/forms';
     ModalModule.forRoot(),
     CollapseModule.forRoot(),
     BrowserModule,
-    FormsModule 
+    FormsModule
   ],
-  
-  providers: [],
+
+  providers: [CsvService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

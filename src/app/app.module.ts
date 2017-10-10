@@ -1,7 +1,9 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { AppComponent, MyFilterPipe } from './app.component';
+import { FormsModule }   from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -10,7 +12,9 @@ import { AppComponent, MyFilterPipe } from './app.component';
   ],
   imports: [
     ModalModule.forRoot(),
-    BrowserModule
+    CollapseModule.forRoot(),
+    BrowserModule,
+    FormsModule 
   ],
   
   providers: [],

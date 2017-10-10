@@ -14,16 +14,16 @@ export class AppComponent implements AfterViewInit {
     this.modal.show();
   }
   host = '';
+  error = '';
+  client = null;
   requests: Array<{ time: string, url: string }> = [];
   @ViewChild('lgModal') modal: ModalDirective;
   public modalRef: BsModalRef;
   public filter: any = {
     url: ''
   };
-  public setIp(ip: string) {
-    this.host = ip;
-
-    CDP({ host: ip ,secure: false}, (client) => {
+  public start() {
+    CDP({ host: this.host }, (client) => {
       // extract domains
       const { Network, Page } = client;
       // setup handlers
@@ -46,9 +46,23 @@ export class AppComponent implements AfterViewInit {
       });
     }).on('error', (err) => {
       this.host = '';
+      this.error = err;
       // cannot connect to the remote endpoint
       console.error(err);
     });
+  }
+  public setIp(host: string) {
+    this.error = '';
+    this.host = host;
+    CDP.List({ host }).then((client) => {
+      this.client = client[0];
+    }).catch((error) => {
+      this.host = '';
+      this.client = null
+      console.log(error);
+      this.error = error;
+    })
+
   }
   constructor(private modalService: BsModalService) {
 
@@ -60,15 +74,15 @@ export class AppComponent implements AfterViewInit {
 
 
 @Pipe({
-    name: 'myfilter',
-    pure: false
+  name: 'myfilter',
+  pure: false
 })
 export class MyFilterPipe implements PipeTransform {
-    transform(items: any[], filter: {url: string}): any {
-        if (!items || !filter) {
-            return items;
-        }
-        // filter items array, items which match and return true will be kept, false will be filtered out
-        return items.filter(item => item.url.indexOf(filter.url) !== -1);
+  transform(items: any[], filter: { url: string }): any {
+    if (!items || !filter) {
+      return items;
     }
+    // filter items array, items which match and return true will be kept, false will be filtered out
+    return items.filter(item => item.url.indexOf(filter.url) !== -1);
+  }
 }

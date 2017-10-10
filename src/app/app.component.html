@@ -1,32 +1,74 @@
-
 <div class="table">
     <div class="row top-row">
         <form class="form-inline col-sm-12">
-  <label for="inlineFormInputName2">filter:</label>
-  <input #filterInput (keydown)='filter = { url : filterInput.value}' type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="inlineFormInputName2"/>
-</form>
-        <div  class="col-sm-1">#</div>
-        <div  class="col-sm-2">Time</div>
-        <div  class="col-sm-9">Url</div>
+            <label for="inlineFormInputName2">filter:</label>
+            <input #filterInput (keydown)='filter = { url : filterInput.value}' type="text" class="form-control mb-2 mr-sm-2 mb-sm-0"
+                id="inlineFormInputName2" />
+        </form>
+        <div class="col-sm-1">#</div>
+        <div class="col-sm-2">Time</div>
+        <div class="col-sm-9">Url</div>
     </div>
     <div class="row" *ngFor="let request of requests | myfilter:filter; let i = index">
-        <div  class="col-sm-1">{{i}}</div>
-        <div  class="col-sm-2">{{request.time}}</div>
-        <div  class="col-sm-9">{{request.url}}</div>
+        <div class="col-sm-1">{{i}}</div>
+        <div class="col-sm-2">{{request.time}}</div>
+        <div class="col-sm-9">{{request.url}}</div>
     </div>
 </div>
 <div bsModal #lgModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title pull-left">please enter chromecast receiver ip</h4>
+                <div>
+                    <h3 class="modal-title">Configuration</h3>
+                </div>
+                <div>
+                    <p>please make sure your using <a href="https://stackoverflow.com/a/6083677/2630100">chrome with <code>--disable-web-security</code></a></p>
+                </div>
             </div>
             <div class="modal-body">
-                <div class="form-inline">
-                    <div class="form-group">
-                        <input #ip class="form-control" name="ip" type="text" />
+                <button type="button" class="btn btn-primary" (click)="isCollapsed = !isCollapsed">get chromecast ip</button>
+                <div [collapse]="!isCollapsed" class="card card-block card-header">
+                    <div class="well well-lg">
+                        <ul>
+                            <li>start casting</li>
+                            <li>write in the url <code>chrome://cast</code></li>
+                            <li>choose the the chrome cast that run the appliction</li>
+                            <li>in the url you should see the ip of the chrome cast device</li>
+                        </ul>
                     </div>
-                    <button *ngIf="host === ''" type="submit" class="btn btn-primary" (click)="setIp(ip.value)">Submit</button>
+                </div>
+
+                <hr/>
+                <form class="form-inline" (ngSubmit)="setIp(ip.value)" #ipForm="ngForm">
+                    <div class="form-group row">
+                        <label for="ip" class="col-sm-2 col-form-label">ip</label>
+                        <input #ip class="form-control" name="ip" type="text" />
+                        <button type="submit" class="btn btn-primary ">check</button>
+                    </div>
+
+                </form>
+
+                <form *ngIf="client !== null" style="overflow: hidden">
+                    <br/>
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-2 col-form-label">Title</label>
+                        <div class="col-sm-10">
+                            <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{client?.title}}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputPassword" class="col-sm-2 col-form-label">Url</label>
+                        <div class="col-sm-10">
+                            <input type="text" readonly class="form-control-plaintext" id="inputPassword" value="{{client?.url}}">
+                        </div>
+                    </div>
+                    <button (click)="start()" type="submit" class="btn btn-primary pull-right">start sniffing</button>
+                </form>
+
+                <hr/>
+                <div *ngIf="error !== ''" class="alert alert-primary alert-danger" role="alert">
+                    {{error}}
                 </div>
             </div>
         </div>

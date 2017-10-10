@@ -33,3 +33,24 @@
     top: 0;
 }
 
+.form-control-plaintext {
+    padding-top: .5rem;
+    padding-bottom: .5rem;
+    margin-bottom: 0;
+    line-height: 1.25;
+    border: solid transparent;
+    border-width: 1px 0;
+    width: 100%;
+}
+
+.form-group.row {
+    border: none;
+}
+
+.col-sm-10 {
+    border: none !important;
+}
+
+label {
+    text-align: right;
+}

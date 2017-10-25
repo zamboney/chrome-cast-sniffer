@@ -4,6 +4,12 @@
     margin-top: 30px;
     padding-top: 20px;
 }
+pre span {white-space: normal;}
+   .string { color: green; }
+   .number { color: darkorange; }
+   .boolean { color: blue; }
+   .null { color: magenta; }
+   .key { color: red; }
 
 
 .row.top-row {

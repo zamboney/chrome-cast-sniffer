@@ -2,20 +2,23 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
-import { AppComponent, MyFilterPipe } from './app.component';
+import { AppComponent, MyFilterPipe, PrettyPrintPipe } from './app.component';
 import { FormsModule } from '@angular/forms';
 import { CsvService } from "angular2-json2csv";
+import {PrettyJsonModule} from 'angular2-prettyjson';
 
 @NgModule({
   declarations: [
     AppComponent,
-    MyFilterPipe
+    PrettyPrintPipe,
+    MyFilterPipe,
   ],
   imports: [
     ModalModule.forRoot(),
     CollapseModule.forRoot(),
     BrowserModule,
-    FormsModule
+    FormsModule,
+    PrettyJsonModule,
   ],
 
   providers: [CsvService],

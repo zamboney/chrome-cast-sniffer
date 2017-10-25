@@ -13,12 +13,28 @@
         </form>
         <div class="col-sm-1">#</div>
         <div class="col-sm-2">Time</div>
-        <div class="col-sm-9">Url</div>
+        <div class="col-sm-7">Url</div>
+        <div class="col-sm-2">Status</div>
     </div>
-    <div class="row" *ngFor="let request of requests | myfilter:filter; let i = index">
+    <div (click)="showResponse(request)" class="row" *ngFor="let request of requests | myfilter:filter; let i = index">
         <div class="col-sm-1">{{i}}</div>
         <div class="col-sm-2">{{request.time}}</div>
-        <div class="col-sm-9">{{request.url}}</div>
+        <div class="col-sm-7">{{request.url}}</div>
+        <div class="col-sm-2">{{request.status}}</div>
+
+    </div>
+</div>
+<div bsModal #responseModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                Response
+            </div>
+            <div class="modal-body">
+                <pre  [innerHTML]="response | prettyjson:3"></pre >
+            </div>
+        </div>
     </div>
 </div>
 <div bsModal #lgModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">

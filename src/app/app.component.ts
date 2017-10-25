@@ -33,9 +33,10 @@ export class AppComponent implements AfterViewInit {
   public host = '';
   public error = '';
   public client = null;
-  public requests: Array<{ time: string, url: string }> = [];
+  public requests: Array<{ requestId: string, response?: any, status?: any, raw: any, time: string, url: string }> = [];
   public rawRequests = [];
   @ViewChild('lgModal') public modal: ModalDirective;
+  @ViewChild('responseModal') public responseModal: ModalDirective;
   public modalRef: BsModalRef;
   public filter: any = {
     url: '',
@@ -45,11 +46,14 @@ export class AppComponent implements AfterViewInit {
       // extract domains
       const { Network, Page } = client;
       // setup handlers
+
       Network.requestWillBeSent((params) => {
         this.rawRequests.push(
           params.request,
         );
         this.requests.push({
+          raw: params,
+          requestId: params.requestId,
           time: new Date().toLocaleTimeString(),
           url: params.request.url,
         });
@@ -58,8 +62,10 @@ export class AppComponent implements AfterViewInit {
         }
       });
       Network.responseReceived((params) => {
-        // let request = this.rawRequests.filter((req)=>req);
-        // debugger;
+        const index = this.requests.findIndex((req) => req.requestId === params.requestId);
+        this.requests[index].response = params.response;
+        this.requests[index].status = params.response.status;
+
       });
       this.modal.hide();
       // enable events then start!
@@ -76,6 +82,11 @@ export class AppComponent implements AfterViewInit {
       // cannot connect to the remote endpoint
       console.error(err);
     });
+  }
+  private response = {};
+  public showResponse(request) {
+    this.responseModal.show();
+    this.response = request.response;
   }
   public setIp(host: string) {
     this.error = '';
@@ -106,5 +117,16 @@ export class MyFilterPipe implements PipeTransform {
     }
     // filter items array, items which match and return true will be kept, false will be filtered out
     return items.filter((item) => item.url.indexOf(filter.url) !== -1);
+  }
+}
+// tslint:disable-next-line:max-classes-per-file
+@Pipe({
+  name: 'prettyprint',
+})
+export class PrettyPrintPipe {
+  public transform(val) {
+    return JSON.stringify(val, null, 2)
+      .replace(' ', '&nbsp;')
+      .replace('\n', '<br/>');
   }
 }

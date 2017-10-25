@@ -83,7 +83,7 @@ export class AppComponent implements AfterViewInit {
       console.error(err);
     });
   }
-  private response = {};
+  public response = {};
   public showResponse(request) {
     this.responseModal.show();
     this.response = request.response;

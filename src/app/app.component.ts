@@ -1,38 +1,44 @@
-import { Component, ViewChild, AfterViewInit } from '@angular/core';
+// tslint:disable:member-ordering
+// tslint:disable:no-console
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
+// tslint:disable-next-line:no-duplicate-imports
 import { Pipe, PipeTransform } from '@angular/core';
+import { CsvService } from 'angular2-json2csv';
 import * as  CDP from 'chrome-remote-interface';
-import { BsModalService, BsModalRef, ModalDirective } from "ngx-bootstrap/modal";
-import { CsvService } from "angular2-json2csv";
+// tslint:disable-next-line:ordered-imports
+// tslint:disable-next-line:no-submodule-imports
+import { BsModalRef, BsModalService, ModalDirective } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-root',
+  styles: [],
   templateUrl: './app.component.html',
-  styles: []
 })
 export class AppComponent implements AfterViewInit {
-  ngAfterViewInit(): void {
+  public ngAfterViewInit(): void {
     this.modal.config.ignoreBackdropClick = true;
     this.modal.show();
   }
-  save() {
-    var a = document.createElement("a");
-    var file = new Blob([JSON.stringify(this.rawRequests.filter(item => item.url.indexOf(this.filter.url) !== -1),null, '\t')], {type: 'application/json'});
-    a.href = URL.createObjectURL(file);
-    a.download = `${this.client.title}_ip_${this.host.replace(/\./g, '-')}_${Date.now()}.json`;
-    a.click();
+  public save() {
+    const aElement = document.createElement('a');
+    // tslint:disable-next-line:max-line-length
+    const file = new Blob([JSON.stringify(this.rawRequests.filter((item) => item.url.indexOf(this.filter.url) !== -1), null, '\t')], { type: 'application/json' });
+    aElement.href = URL.createObjectURL(file);
+    aElement.download = `${this.client.title}_ip_${this.host.replace(/\./g, '-')}_${Date.now()}.json`;
+    aElement.click();
 
   }
-  pulldown = true;
-  isCollapsed = true;
-  host = '';
-  error = '';
-  client = null;
-  requests: Array<{ time: string, url: string }> = [];
-  rawRequests = [];
-  @ViewChild('lgModal') modal: ModalDirective;
+  public pulldown = true;
+  public isCollapsed = true;
+  public host = '';
+  public error = '';
+  public client = null;
+  public requests: Array<{ time: string, url: string }> = [];
+  public rawRequests = [];
+  @ViewChild('lgModal') public modal: ModalDirective;
   public modalRef: BsModalRef;
   public filter: any = {
-    url: ''
+    url: '',
   };
   public start() {
     CDP({ host: this.host }, (client) => {
@@ -41,22 +47,26 @@ export class AppComponent implements AfterViewInit {
       // setup handlers
       Network.requestWillBeSent((params) => {
         this.rawRequests.push(
-          params.request
-        )
+          params.request,
+        );
         this.requests.push({
           time: new Date().toLocaleTimeString(),
-          url: params.request.url
-        })
-        if (this.pulldown)
+          url: params.request.url,
+        });
+        if (this.pulldown) {
           window.scrollTo(0, document.body.scrollHeight);
+        }
+      });
+      Network.responseReceived((params) => {
+        // let request = this.rawRequests.filter((req)=>req);
+        // debugger;
       });
       this.modal.hide();
       // enable events then start!
       Promise.all([
-        Network.enable()
-      ]).then(() => {
-
-      }).catch((err) => {
+        Network.enable(),
+      ]).catch((err) => {
+        // tslint:disable-next-line:no-console
         console.error(err);
         client.close();
       });
@@ -74,31 +84,27 @@ export class AppComponent implements AfterViewInit {
       this.client = client[0];
     }).catch((error) => {
       this.host = '';
-      this.client = null
+      this.client = null;
       console.log(error);
       this.error = error;
-    })
+    });
 
   }
   constructor(private modalService: BsModalService, private csvService: CsvService) {
 
   }
 }
-
-
-
-
-
+// tslint:disable-next-line:max-classes-per-file
 @Pipe({
   name: 'myfilter',
-  pure: false
+  pure: false,
 })
 export class MyFilterPipe implements PipeTransform {
-  transform(items: any[], filter: { url: string }): any {
+  public transform(items: any[], filter: { url: string }): any {
     if (!items || !filter) {
       return items;
     }
     // filter items array, items which match and return true will be kept, false will be filtered out
-    return items.filter(item => item.url.indexOf(filter.url) !== -1);
+    return items.filter((item) => item.url.indexOf(filter.url) !== -1);
   }
 }

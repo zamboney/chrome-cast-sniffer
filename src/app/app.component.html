@@ -97,5 +97,8 @@
     </div>
 </div>
 <div *ngIf="requests.length > 0" class="save" style="position: fixed; bottom:0;right:0">
+    <button type="button" (click)="console()" class="btn btn-info">Console</button>
     <button type="button" (click)="save()" class="btn btn-info">Save</button>
+    <button type="button" (click)="clear()" class="btn btn-danger">clear</button>
+    
 </div>

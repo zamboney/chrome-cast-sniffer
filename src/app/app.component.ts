@@ -19,6 +19,20 @@ export class AppComponent implements AfterViewInit {
     this.modal.config.ignoreBackdropClick = true;
     this.modal.show();
   }
+  public clear(){
+    this.rawRequests = [];
+    this.requests = [];
+    this.consoleLogs = [];
+  }
+  consoleLogs = []
+  public console(){
+    const aElement = document.createElement('a');
+    // tslint:disable-next-line:max-line-length
+    const file = new Blob([JSON.stringify(this.consoleLogs, null, '\t')], { type: 'application/json' });
+    aElement.href = URL.createObjectURL(file);
+    aElement.download = `${this.client.title}_ip_${this.host.replace(/\./g, '-')}_CONSOLE_${Date.now()}.json`;
+    aElement.click();
+  }
   public save() {
     const aElement = document.createElement('a');
     // tslint:disable-next-line:max-line-length
@@ -44,9 +58,12 @@ export class AppComponent implements AfterViewInit {
   public start() {
     CDP({ host: this.host }, (client) => {
       // extract domains
-      const { Network, Page } = client;
+      const { Network, Page, Console } = client;
       // setup handlers
-
+      Console.messageAdded((params)=>{
+        const {message} = params;
+        this.consoleLogs.push(message);
+      })
       Network.requestWillBeSent((params) => {
         this.rawRequests.push(
           params.request,
@@ -71,6 +88,7 @@ export class AppComponent implements AfterViewInit {
       // enable events then start!
       Promise.all([
         Network.enable(),
+        Console.enable()
       ]).catch((err) => {
         // tslint:disable-next-line:no-console
         console.error(err);
@@ -96,6 +114,7 @@ export class AppComponent implements AfterViewInit {
     }).catch((error) => {
       this.host = '';
       this.client = null;
+      
       console.log(error);
       this.error = error;
     });

@@ -8,6 +8,7 @@ import * as  CDP from 'chrome-remote-interface';
 // tslint:disable-next-line:ordered-imports
 // tslint:disable-next-line:no-submodule-imports
 import { BsModalRef, BsModalService, ModalDirective } from 'ngx-bootstrap/modal';
+import { Logger } from 'angular2-logger/core';
 
 @Component({
   selector: 'app-root',
@@ -62,9 +63,11 @@ export class AppComponent implements AfterViewInit {
       // setup handlers
       Console.messageAdded((params)=>{
         const {message} = params;
+        this._logger[message.level](message.text);
         this.consoleLogs.push(message);
       })
       Network.requestWillBeSent((params) => {
+        
         this.rawRequests.push(
           params.request,
         );
@@ -80,6 +83,7 @@ export class AppComponent implements AfterViewInit {
       });
       Network.responseReceived((params) => {
         const index = this.requests.findIndex((req) => req.requestId === params.requestId);
+        Network.getResponseBody({requestId: params.requestId},(data)=>{debugger;console.log(data);return data});
         this.requests[index].response = params.response;
         this.requests[index].status = params.response.status;
 
@@ -120,7 +124,8 @@ export class AppComponent implements AfterViewInit {
     });
 
   }
-  constructor(private modalService: BsModalService, private csvService: CsvService) {
+  constructor(private modalService: BsModalService, private csvService: CsvService, private _logger: Logger) {
+    this._logger.level = 100000;
 
   }
 }

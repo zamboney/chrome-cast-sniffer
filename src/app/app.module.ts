@@ -6,6 +6,7 @@ import { AppComponent, MyFilterPipe, PrettyPrintPipe } from './app.component';
 import { FormsModule } from '@angular/forms';
 import { CsvService } from "angular2-json2csv";
 import {PrettyJsonModule} from 'angular2-prettyjson';
+import { Logger } from "angular2-logger/core";
 
 @NgModule({
   declarations: [
@@ -21,7 +22,7 @@ import {PrettyJsonModule} from 'angular2-prettyjson';
     PrettyJsonModule,
   ],
 
-  providers: [CsvService],
+  providers: [CsvService, Logger],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

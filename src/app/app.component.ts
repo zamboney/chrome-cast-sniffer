@@ -20,13 +20,13 @@ export class AppComponent implements AfterViewInit {
     this.modal.config.ignoreBackdropClick = true;
     this.modal.show();
   }
-  public clear(){
+  public clear() {
     this.rawRequests = [];
     this.requests = [];
     this.consoleLogs = [];
   }
   consoleLogs = []
-  public console(){
+  public console() {
     const aElement = document.createElement('a');
     // tslint:disable-next-line:max-line-length
     const file = new Blob([JSON.stringify(this.consoleLogs, null, '\t')], { type: 'application/json' });
@@ -59,15 +59,26 @@ export class AppComponent implements AfterViewInit {
   public start() {
     CDP({ host: this.host }, (client) => {
       // extract domains
-      const { Network, Page, Console } = client;
+      const { Network, Page, Runtime } = client;
       // setup handlers
-      Console.messageAdded((params)=>{
-        const {message} = params;
-        this._logger[message.level](message.text);
-        this.consoleLogs.push(message);
+      Runtime.consoleAPICalled((params) => {
+        let method = (value)=>this._logger[params.type](value);
+        if (typeof this._logger[params.type] === 'undefined') {
+          method = (value)=>this._logger.log(value);
+        }
+        params.args.forEach(element => {
+          if (element.type === 'string')
+            method(element.value);
+          else
+            method(element);
+
+        });
+
+
+        this.consoleLogs.push(params);
       })
       Network.requestWillBeSent((params) => {
-        
+
         this.rawRequests.push(
           params.request,
         );
@@ -83,7 +94,7 @@ export class AppComponent implements AfterViewInit {
       });
       Network.responseReceived((params) => {
         const index = this.requests.findIndex((req) => req.requestId === params.requestId);
-        Network.getResponseBody({requestId: params.requestId},(data)=>{debugger;console.log(data);return data});
+        Network.getResponseBody({ requestId: params.requestId }, (data) => { debugger; console.log(data); return data });
         this.requests[index].response = params.response;
         this.requests[index].status = params.response.status;
 
@@ -92,7 +103,7 @@ export class AppComponent implements AfterViewInit {
       // enable events then start!
       Promise.all([
         Network.enable(),
-        Console.enable()
+        Runtime.enable()
       ]).catch((err) => {
         // tslint:disable-next-line:no-console
         console.error(err);
@@ -118,7 +129,7 @@ export class AppComponent implements AfterViewInit {
     }).catch((error) => {
       this.host = '';
       this.client = null;
-      
+
       console.log(error);
       this.error = error;
     });
@@ -140,7 +151,7 @@ export class MyFilterPipe implements PipeTransform {
       return items;
     }
     // filter items array, items which match and return true will be kept, false will be filtered out
-    return items.filter((item) => item.url.indexOf(filter.url) !== -1);
+    return items.filter((item) => (item.url ? item.url : item.text).indexOf(filter.url) !== -1);
   }
 }
 // tslint:disable-next-line:max-classes-per-file
